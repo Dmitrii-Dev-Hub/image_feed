@@ -4,9 +4,9 @@ import UIKit
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
     
-    var postCellImage = UIImageView()
-    var postCellHeartButton = UIButton()
-    var postCellDataLabel = UILabel()
+    private let postCellImage = UIImageView()
+    private let postCellHeartButton = UIButton()
+    private let postCellDataLabel = UILabel()
     
     private lazy var dateFormatter: DateFormatter = {
             let formatter = DateFormatter()
@@ -33,14 +33,14 @@ final class ImagesListCell: UITableViewCell {
         
     }
     
-    func setupPostCellHeartButton() {
+    private func setupPostCellHeartButton() {
         postCellHeartButton.setImage(UIImage(named: "Active"), for: .normal)
         postCellHeartButton.translatesAutoresizingMaskIntoConstraints = false
         postCellHeartButton.backgroundColor = .clear
         
     }
     
-    func setupCell(post: Image, isActive: Bool) {
+    func setupCell(post: Photo, isActive: Bool) {
         postCellImage.layer.cornerRadius = 16
         postCellImage.clipsToBounds = true
         postCellImage.translatesAutoresizingMaskIntoConstraints = false
@@ -54,7 +54,7 @@ final class ImagesListCell: UITableViewCell {
         
     }
     
-    func setupPostCellDataLabel() {
+    private func setupPostCellDataLabel() {
         let currentDate = Date()
         postCellDataLabel.translatesAutoresizingMaskIntoConstraints = false
         postCellDataLabel.text = dateFormatter.string(from: currentDate)
@@ -91,9 +91,6 @@ final class ImagesListCell: UITableViewCell {
                 equalTo: postCellImage.leadingAnchor, constant: 8),
             postCellDataLabel.bottomAnchor.constraint(
                 equalTo: postCellImage.bottomAnchor, constant: -8),
-            //postCellDataLabel.trailingAnchor.constraint(
-               // equalTo: contentView.trailingAnchor, constant: -8),
-           // postCellDataLabel.heightAnchor.constraint(equalToConstant: 20)
             
         ])
     }

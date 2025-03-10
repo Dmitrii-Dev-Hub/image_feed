@@ -2,21 +2,25 @@
 
 import UIKit
 
-class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController {
     
     
-    private let images = Image.mockData()
+    private let images = Photo.mockData()
     private let tableView = UITableView(frame: .zero, style: .plain)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .ypBlack
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        setupTableView()
         setupConstraintsTableView()
+        
+        
+    }
+    
+    private func setupTableView(){
         tableView.backgroundColor = .ypBlack
         tableView.separatorStyle = .none
         tableView.delegate = self
@@ -39,11 +43,10 @@ class ImagesListViewController: UIViewController {
         ])
         
     }
-    private func configCell(for cell: ImagesListCell) { }
   }
-//#Preview(traits: .portrait) {
-//    ImagesListViewController()
-//}
+#Preview(traits: .portrait) {
+    ImagesListViewController()
+}
 
 extension ImagesListViewController: UITableViewDelegate {
     

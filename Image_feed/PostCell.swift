@@ -1,7 +1,7 @@
 import UIKit
 
 
-class PostCell: UITableViewCell {
+final class PostCell: UITableViewCell {
     
     static let reuseId = "PostCell"
     

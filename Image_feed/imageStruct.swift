@@ -1,30 +1,30 @@
 
 
-struct Image {
+struct Photo {
     let image: String
     
-    static func mockData() -> [Image] {
+    static func mockData() -> [Photo] {
         [
-        Image(image: "0"),
-        Image(image: "1"),
-        Image(image: "2"),
-        Image(image: "3"),
-        Image(image: "4"),
-        Image(image: "5"),
-        Image(image: "6"),
-        Image(image: "7"),
-        Image(image: "8"),
-        Image(image: "9"),
-        Image(image: "10"),
-        Image(image: "11"),
-        Image(image: "12"),
-        Image(image: "13"),
-        Image(image: "14"),
-        Image(image: "15"),
-        Image(image: "16"),
-        Image(image: "17"),
-        Image(image: "18"),
-        Image(image: "19"),
+        Photo(image: "0"),
+        Photo(image: "1"),
+        Photo(image: "2"),
+        Photo(image: "3"),
+        Photo(image: "4"),
+        Photo(image: "5"),
+        Photo(image: "6"),
+        Photo(image: "7"),
+        Photo(image: "8"),
+        Photo(image: "9"),
+        Photo(image: "10"),
+        Photo(image: "11"),
+        Photo(image: "12"),
+        Photo(image: "13"),
+        Photo(image: "14"),
+        Photo(image: "15"),
+        Photo(image: "16"),
+        Photo(image: "17"),
+        Photo(image: "18"),
+        Photo(image: "19"),
         ]
     }
 }
