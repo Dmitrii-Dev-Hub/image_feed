@@ -6,14 +6,17 @@ final class ImagesListViewController: UIViewController {
     
     
     private let images = Photo.mockData()
-    private let tableView = UITableView(frame: .zero, style: .plain)
+    private let tableView = UITableView(
+        frame: .zero,
+        style: .plain)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .ypBlack
         view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView
+            .translatesAutoresizingMaskIntoConstraints = false
         setupTableView()
         setupConstraintsTableView()
         
@@ -36,10 +39,14 @@ final class ImagesListViewController: UIViewController {
     
     private func setupConstraintsTableView(){
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            tableView.topAnchor.constraint(
+                equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(
+                equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor)
         ])
         
     }
@@ -50,7 +57,8 @@ final class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController: UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(
+        _ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let photo = UIImage(named: images[indexPath.row].image)
         
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
