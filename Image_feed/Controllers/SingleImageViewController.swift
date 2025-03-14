@@ -136,6 +136,6 @@ class SingleImageViewController: UIViewController, UIScrollViewDelegate {
 
     
 }
-#Preview(traits: .portrait) {
-    SingleImageViewController()
-}
+//#Preview(traits: .portrait) {
+//    SingleImageViewController()
+//}
