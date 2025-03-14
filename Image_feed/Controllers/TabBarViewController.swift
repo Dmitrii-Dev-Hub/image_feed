@@ -1,21 +1,22 @@
 
 import UIKit
 
-class TabBarViewController: UITabBarController {
+final class TabBarViewController: UITabBarController {
     
     private let imagesListViewController = ImagesListViewController()
     private let profileViewController = ProfileViewController()
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBarImage()
         setupImagesListViewController()
         setupProfileViewController()
-        
+
         setViewControllers([imagesListViewController,
                             profileViewController,
                            ], animated: true)
-        
     }
     
     private func setupTabBarImage(){
@@ -25,12 +26,11 @@ class TabBarViewController: UITabBarController {
         tabBar.unselectedItemTintColor = .ypTabBarColorNoActive
     }
     
-    
     private func setupImagesListViewController(){
         imagesListViewController.tabBarItem = UITabBarItem(
-        title: "",
-        image: UIImage(named: "EditorialNoActive"),
-        selectedImage: UIImage(named: "EditorialActive")
+            title: "",
+            image: UIImage(named: "EditorialNoActive"),
+            selectedImage: UIImage(named: "EditorialActive")
         )
     }
     
@@ -39,7 +39,7 @@ class TabBarViewController: UITabBarController {
             title: "",
             image: UIImage(named: "ProfileNoActive"),
             selectedImage: UIImage(named: "ProfileActive")
-            )
+        )
     }
     
     

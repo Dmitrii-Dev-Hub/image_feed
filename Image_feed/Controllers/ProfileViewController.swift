@@ -1,6 +1,6 @@
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     
     private let imageViewUserPhoto = UIImageView()
     private let exitButton = UIButton()

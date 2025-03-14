@@ -33,7 +33,7 @@ final class ImagesListViewController: UIViewController {
             ImagesListCell.self,
             forCellReuseIdentifier: ImagesListCell.reuseIdentifier
         )
-        tableView.allowsSelection = false
+        tableView.allowsSelection = true
         
     }
     
@@ -59,6 +59,7 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(
         _ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            
         let photo = UIImage(named: images[indexPath.row].image)
         
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
@@ -68,7 +69,20 @@ extension ImagesListViewController: UITableViewDelegate {
         let scale = imageViewWidth / imageWidth
         let cellHeight = (photo?.size.height)! * scale + imageInsets.top + imageInsets.bottom
         return cellHeight
+            
     }
+    func tableView(
+           _ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+           
+           let selectedPhoto = images[indexPath.row]
+           
+           let singleImageVC = SingleImageViewController()
+           singleImageVC.selectedPhoto = selectedPhoto
+           
+           singleImageVC.modalPresentationStyle = .fullScreen
+           present(singleImageVC, animated: true, completion: nil)
+       }
+    
 }
 
 extension ImagesListViewController: UITableViewDataSource {
@@ -85,6 +99,7 @@ extension ImagesListViewController: UITableViewDataSource {
         
             cell.setupCell(post: image, isActive: isActive)
             
+        
             return cell
         }
 }
