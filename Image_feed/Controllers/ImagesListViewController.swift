@@ -51,23 +51,29 @@ final class ImagesListViewController: UIViewController {
         
     }
   }
-#Preview(traits: .portrait) {
-    ImagesListViewController()
-}
+//#Preview(traits: .portrait) {
+//    ImagesListViewController()
+//}
 
 extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(
-        _ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        _ tableView: UITableView,
+        heightForRowAt indexPath: IndexPath) -> CGFloat {
             
-        let photo = UIImage(named: images[indexPath.row].image)
+        let photo = UIImage(
+            named: images[indexPath.row].image)
         
-        let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
-        let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
+        let imageInsets = UIEdgeInsets(
+            top: 4, left: 16, bottom: 4, right: 16)
+        let imageViewWidth = tableView
+                .bounds.width - imageInsets.left - imageInsets.right
         
         let imageWidth = (photo?.size.width)!
         let scale = imageViewWidth / imageWidth
-        let cellHeight = (photo?.size.height)! * scale + imageInsets.top + imageInsets.bottom
+        let cellHeight = (
+            photo?.size.height)! * scale + imageInsets
+                .top + imageInsets.bottom
         return cellHeight
             
     }
@@ -86,11 +92,14 @@ extension ImagesListViewController: UITableViewDelegate {
 }
 
 extension ImagesListViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(
+        _ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return images.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath) as! ImagesListCell
             
             let image = images[indexPath.row]

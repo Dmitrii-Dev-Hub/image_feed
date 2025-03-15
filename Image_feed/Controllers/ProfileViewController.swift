@@ -53,6 +53,7 @@ final class ProfileViewController: UIViewController {
         userEmailLabel
             .translatesAutoresizingMaskIntoConstraints = false
         userEmailLabel.text = "@ekaterina_nov"
+        userEmailLabel.font = UIFont.systemFont(ofSize: 13)
         userEmailLabel.textColor = .ypGrey
         userEmailLabel.textAlignment = .left
         userEmailLabel.numberOfLines = 0
@@ -129,5 +130,5 @@ extension UIView {
 //#Preview(traits: .portrait) {
 //    ProfileViewController()
 //}
-
+//
 
