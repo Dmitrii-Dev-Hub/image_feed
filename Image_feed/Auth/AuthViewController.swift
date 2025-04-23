@@ -115,6 +115,6 @@ protocol AuthViewControllerDelegate: AnyObject {
 //    }
 //}
 
-#Preview(traits: .portrait) {
-    AuthViewController()
-}
+//#Preview(traits: .portrait) {
+//    AuthViewController()
+//}

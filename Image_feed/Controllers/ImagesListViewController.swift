@@ -51,9 +51,9 @@ final class ImagesListViewController: UIViewController {
         
     }
   }
-#Preview(traits: .portrait) {
-    ImagesListViewController()
-}
+//#Preview(traits: .portrait) {
+//    ImagesListViewController()
+//}
 
 extension ImagesListViewController: UITableViewDelegate {
     

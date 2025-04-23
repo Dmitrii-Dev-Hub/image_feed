@@ -136,9 +136,9 @@ class SingleImageViewController: UIViewController, UIScrollViewDelegate {
 
     
 }
-#Preview(traits: .portrait) {
-    let vc = SingleImageViewController()
-    vc.selectedPhoto = Photo.mockData().first
-    return vc
-}
+////#Preview(traits: .portrait) {
+//    let vc = SingleImageViewController()
+//    vc.selectedPhoto = Photo.mockData().first
+//    return vc
+//}
 
