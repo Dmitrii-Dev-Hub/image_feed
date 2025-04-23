@@ -127,8 +127,8 @@ extension UIView {
         addSubview(view)
     }
 }
-//#Preview(traits: .portrait) {
-//    ProfileViewController()
-//}
-//
+#Preview(traits: .portrait) {
+    ProfileViewController()
+}
+
 

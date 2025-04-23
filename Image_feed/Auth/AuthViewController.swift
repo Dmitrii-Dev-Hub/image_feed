@@ -1,7 +1,30 @@
 import UIKit
 
-class AuthViewController: UIViewController {
-
+class AuthViewController: UIViewController, WebViewViewControllerDelegate {
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        self.navigationController?.popViewController(animated: true)
+        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
+                   guard let self = self else { return }
+                   self.navigationController?.popViewController(animated: true)
+                   
+                   switch result {
+                   case .success(let bearerToken):
+                       self.oauth2TokenStorage.token = bearerToken
+                       delegate?.didAuthenticate(self)
+                   case .failure(let error):
+                       print("failure with error - \(error)")
+                   }
+               }
+    }
+    
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    
+    private let oauth2Service = OAuth2Service.shared
+    private let oauth2TokenStorage = OAuth2TokenStorage()
+    weak var delegate: AuthViewControllerDelegate?
     private let imageView = UIImageView()
     private let button = UIButton()
     
@@ -10,7 +33,7 @@ class AuthViewController: UIViewController {
         
         view.backgroundColor = .ypBlack
         setupImageView()
-        stupButton()
+        setupButton()
         setupConstraints()
         
     }
@@ -22,7 +45,7 @@ class AuthViewController: UIViewController {
         view.addSubview(imageView)
     }
     
-    private func stupButton() {
+    private func setupButton() {
         button
             .translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Войти", for: .normal)
@@ -61,17 +84,37 @@ class AuthViewController: UIViewController {
                     .safeAreaLayoutGuide.bottomAnchor, constant: -90),
             button.heightAnchor.constraint(
                 equalToConstant: 48),
-            button.widthAnchor.constraint(
-                equalToConstant: 343)
+            //button.widthAnchor.constraint(
+                //equalToConstant: 343)
         ])
     }
     @objc private func openWebView() {
         let webVC = WebViewViewController()
+        webVC.delegate = self
         navigationController?.pushViewController(webVC, animated: true)
         
     }
     
 }
+protocol AuthViewControllerDelegate: AnyObject {
+    func didAuthenticate(_ vc: AuthViewController)
+}
+
+
+//extension AuthViewController: WebViewViewControllerDelegate {
+//    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+////        vc.dismiss(animated: true) // Закрыли WebView
+//
+//        OAuth2Service.shared.fetchOAuthToken(code: code) { result in
+//            // TODO: разберите полученный ответ с помощью оператора switch
+//        }
+//    }
+//    
+//    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+//        dismiss(animated: true)
+//    }
+//}
+
 #Preview(traits: .portrait) {
     AuthViewController()
 }
