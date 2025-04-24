@@ -6,14 +6,12 @@ final class TabBarViewController: UITabBarController {
     private let imagesListViewController = ImagesListViewController()
     private let profileViewController = ProfileViewController()
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBarImage()
         setupImagesListViewController()
         setupProfileViewController()
-
+        
         setViewControllers([imagesListViewController,
                             profileViewController,
                            ], animated: true)
@@ -41,7 +39,5 @@ final class TabBarViewController: UITabBarController {
             selectedImage: UIImage(named: "ProfileActive")
         )
     }
-    
-    
 }
 

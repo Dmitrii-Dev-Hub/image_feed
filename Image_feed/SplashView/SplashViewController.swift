@@ -1,7 +1,7 @@
 
 import UIKit
 
-class SplashViewController: UIViewController {
+final class SplashViewController: UIViewController {
     
     private let storage = OAuth2TokenStorage()
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
@@ -75,11 +75,8 @@ extension SplashViewController {
     }
 }
 
-
-
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
-        //        switchToTabBarController()   Переход на TabBar
     }
 }

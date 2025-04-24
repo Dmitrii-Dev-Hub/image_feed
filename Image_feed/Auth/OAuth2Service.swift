@@ -8,15 +8,12 @@ final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
-    
-    
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         let baseURL = URL(string: "https://unsplash.com")
         
         guard
             let url = URL(string: "/oauth/token"
                           + "?client_id=\(Constants.accessKey)"
-                         //удалил двойной &&
                           + "&client_secret=\(Constants.secretKey)"
                           + "&redirect_uri=\(Constants.redirectURI)"
                           + "&code=\(code)"
@@ -31,37 +28,40 @@ final class OAuth2Service {
         request.httpMethod = "POST"
         return request
     }
+    
     func fetchOAuthToken(
         code: String,
         completion: @escaping (Result<String, Error>) -> Void
     ) {
-//        guard
-            let request = makeOAuthTokenRequest(code: code)
-//        else {
-//            print("OAuth2Service - fetchOAuthToken - Фигня параша request")
-//        }
+        guard let request = makeOAuthTokenRequest(code: code) else {
+            print("OAuth2Service - fetchOAuthToken: invalid request")
+            completion(.failure(NetworkError.urlSessionError))
+            return
+        }
         
-        let task = URLSession.shared.data(for: request!) { result in
-                   switch result {
-                   case .success(let data):
-                       
-                       let decoder = JSONDecoder()
-                       decoder.keyDecodingStrategy = .convertFromSnakeCase
-                       do {
-                           let token = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                           guard let token = token.accessToken else {
-                               completion(.failure(NetworkError.urlSessionError))
-                               return
-                           }
-                           completion(.success(token))
-                       } catch {
-                           completion(.failure(error))
-                       }
-                   case .failure(let error):
-                       print("Error: \(error)")
-                       completion(.failure(error))
-                   }
-               }
+        let task = URLSession.shared.data(for: request) { result in
+            switch result {
+            case .success(let data):
+                
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                do {
+                    let token = try decoder.decode(
+                        OAuthTokenResponseBody.self, from: data)
+                    guard let token = token.accessToken else {
+                        completion(.failure(
+                            NetworkError.urlSessionError))
+                        return
+                    }
+                    completion(.success(token))
+                } catch {
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                print("Error: \(error)")
+                completion(.failure(error))
+            }
+        }
         task.resume()
     }
 }

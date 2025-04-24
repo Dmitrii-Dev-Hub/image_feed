@@ -11,7 +11,7 @@ extension URLSession {
         for request: URLRequest,
         completion: @escaping (Result<Data, Error>) -> Void
     ) -> URLSessionTask {
-        let fulfillCompletionOnTheMainThread: (
+        let fullFillCompletionOnTheMainThread: (
             Result<Data, Error>) -> Void = { result in
                 DispatchQueue.main.async {
                     completion(result)
@@ -25,17 +25,18 @@ extension URLSession {
                    let statusCode = (
                     response as? HTTPURLResponse)?.statusCode {
                     if 200 ..< 300 ~= statusCode {
-                        fulfillCompletionOnTheMainThread(
+                        fullFillCompletionOnTheMainThread(
                             .success(data))
                     } else {
-                        fulfillCompletionOnTheMainThread(
-                            .failure(NetworkError.httpStatusCode(statusCode)))
+                        fullFillCompletionOnTheMainThread(
+                            .failure(
+                                NetworkError.httpStatusCode(statusCode)))
                     }
                 } else if let error = error {
-                    fulfillCompletionOnTheMainThread(
+                    fullFillCompletionOnTheMainThread(
                         .failure(NetworkError.urlRequestError(error)))
                 } else {
-                    fulfillCompletionOnTheMainThread(
+                    fullFillCompletionOnTheMainThread(
                         .failure(NetworkError.urlSessionError))
                 }
             })

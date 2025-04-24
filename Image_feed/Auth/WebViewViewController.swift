@@ -1,10 +1,9 @@
 import UIKit
-import WebKit
+@preconcurrency import WebKit
 
 protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
-    
 }
 
 final class WebViewViewController: UIViewController, AuthViewControllerDelegate {
@@ -12,8 +11,6 @@ final class WebViewViewController: UIViewController, AuthViewControllerDelegate 
         dismiss(animated: true)
     }
     
-    
-    //private let oauth2Service = OAuth2Service()
     private let progressView = UIProgressView()
     private let backwardButton = UIButton()
     private let webView = WKWebView()
@@ -23,13 +20,12 @@ final class WebViewViewController: UIViewController, AuthViewControllerDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         setupWebView()
         setupProgressView()
         setupBackwardButton()
         loadingWebView()
         setupConstraints()
-        
+        view.backgroundColor = .ypWhite
         webView.navigationDelegate = self
         
         webView.addObserver(
@@ -37,7 +33,6 @@ final class WebViewViewController: UIViewController, AuthViewControllerDelegate 
             forKeyPath: #keyPath(WKWebView.estimatedProgress),
             options: .new,
             context: nil)
-        
     }
     
     override func observeValue(
@@ -52,7 +47,7 @@ final class WebViewViewController: UIViewController, AuthViewControllerDelegate 
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
-
+    
     private func updateProgress() {
         progressView.progress = Float(webView.estimatedProgress)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
@@ -69,7 +64,7 @@ final class WebViewViewController: UIViewController, AuthViewControllerDelegate 
         backwardButton
             .translatesAutoresizingMaskIntoConstraints = false
         backwardButton.setImage(
-            UIImage(named: "Backward"), for: .normal)
+            UIImage(resource: .backward), for: .normal)
         backwardButton.addTarget(self, action: #selector(
             backToAuthViewController), for: .touchUpInside)
         view.addSubview(backwardButton)
@@ -141,8 +136,6 @@ final class WebViewViewController: UIViewController, AuthViewControllerDelegate 
         ])
     }
     
-    
-    
     @objc private func backToAuthViewController() {
         let authVC = AuthViewController()
         authVC.delegate = self
@@ -153,44 +146,41 @@ final class WebViewViewController: UIViewController, AuthViewControllerDelegate 
 
 extension WebViewViewController: WKNavigationDelegate {
     func webView(
-            _ webView: WKWebView,
-            decidePolicyFor navigationAction: WKNavigationAction,
-            decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
-        ) {
-            if let code = code(from: navigationAction) {
-                delegate?.webViewViewController(self, didAuthenticateWithCode: code)
-                decisionHandler(.cancel)
-            } else {
-                decisionHandler(.allow)
-            }
-        }
-    
-    
-    
-    private func code(
-        from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(
-                string: url.absoluteString),  //2
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(
-                where: { $0.name == "code" })
-        {
-            return codeItem.value
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) {
+        if let code = code(from: navigationAction) {
+            delegate?.webViewViewController(self, didAuthenticateWithCode: code)
+            decisionHandler(.cancel)
         } else {
-            return nil
+            decisionHandler(.allow)
         }
     }
     
-    
+    private func code(
+        from navigationAction: WKNavigationAction) -> String? {
+            if
+                let url = navigationAction.request.url,
+                let urlComponents = URLComponents(
+                    string: url.absoluteString),  //2
+                urlComponents.path == "/oauth/authorize/native",
+                let items = urlComponents.queryItems,
+                let codeItem = items.first(
+                    where: { $0.name == "code" })
+            {
+                return codeItem.value
+            } else {
+                return nil
+            }
+        }
+
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }
     
 }
-//
+
 //#Preview(traits: .portrait) {
 //    WebViewViewController()
 //}

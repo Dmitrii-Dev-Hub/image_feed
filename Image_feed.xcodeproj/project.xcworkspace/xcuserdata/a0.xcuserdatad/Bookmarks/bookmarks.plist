@@ -14,11 +14,11 @@
 					<key>EndingLineNumber</key>
 					<string>64</string>
 					<key>StartingColumnNumber</key>
-					<string>16</string>
+					<string>0</string>
 					<key>StartingLineNumber</key>
 					<string>63</string>
 					<key>Timestamp</key>
-					<string>767098980.794557</string>
+					<string>767185373.015205</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -34,12 +34,12 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>
+				<string>        }
 </string>
 				<key>leading</key>
-				<string>                       completion(.failure(error))
-                   }
-               }</string>
+				<string>                completion(.failure(error))
+            }
+</string>
 				<key>trailing</key>
 				<string>        task.resume()
     }
