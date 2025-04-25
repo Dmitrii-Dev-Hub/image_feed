@@ -58,7 +58,6 @@ final class ProfileViewController: UIViewController {
         userEmailLabel.textAlignment = .left
         userEmailLabel.numberOfLines = 0
         view.addSubview(userEmailLabel)
-        
     }
     
     private func setupUserGreetingsLabel() {
@@ -72,7 +71,6 @@ final class ProfileViewController: UIViewController {
         
         view.addSubview(userGreetingsLabel)
     }
-    
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -110,13 +108,17 @@ final class ProfileViewController: UIViewController {
                 equalTo: userNameLabel.bottomAnchor, constant: 8),
             userEmailLabel.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor, constant: 16),
-            userEmailLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 16),
+            userEmailLabel.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor, constant: 16),
             
             //
-            userGreetingsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            userGreetingsLabel.topAnchor.constraint(equalTo: userEmailLabel.bottomAnchor, constant: 8),
-            userGreetingsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 16),
-            
+            userGreetingsLabel
+                .leadingAnchor.constraint(
+                    equalTo: view.leadingAnchor, constant: 16),
+            userGreetingsLabel.topAnchor.constraint(
+                equalTo: userEmailLabel.bottomAnchor, constant: 8),
+            userGreetingsLabel.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor, constant: 16),
         ])
     }
 }
@@ -130,5 +132,5 @@ extension UIView {
 //#Preview(traits: .portrait) {
 //    ProfileViewController()
 //}
-//
+
 

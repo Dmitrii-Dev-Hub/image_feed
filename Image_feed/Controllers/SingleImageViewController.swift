@@ -25,7 +25,11 @@ class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         imageView
             .translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: selectedPhoto!.image)
+        guard let photo = selectedPhoto else {
+            imageView.image = nil
+            return
+        }
+        imageView.image = UIImage(named: photo.image)
         scrollView.addSubview(imageView)
     }
     
@@ -117,25 +121,27 @@ class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         dismiss(animated: true, completion: nil)
     }
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-            return imageView
-        }
+        return imageView
+    }
     @objc private func didTapShareButton() {
         guard let image = imageView.image else { return }
         
         let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-       
+        
         if let popover = activityVC.popoverPresentationController {
             popover.sourceView = shareButton
             popover.sourceRect = shareButton.bounds
             popover.permittedArrowDirections = .down
+            present(activityVC, animated: true, completion: nil)
         }
-
-        
         present(activityVC, animated: true, completion: nil)
     }
-
+    
     
 }
-//#Preview(traits: .portrait) {
-//    SingleImageViewController()
+////#Preview(traits: .portrait) {
+//    let vc = SingleImageViewController()
+//    vc.selectedPhoto = Photo.mockData().first
+//    return vc
 //}
+
