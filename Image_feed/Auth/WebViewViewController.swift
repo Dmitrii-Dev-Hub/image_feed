@@ -14,6 +14,8 @@ final class WebViewViewController: UIViewController, AuthViewControllerDelegate 
     private let progressView = UIProgressView()
     private let backwardButton = UIButton()
     private let webView = WKWebView()
+    private var progressObservation: NSKeyValueObservation?
+    
     
     weak var delegate: WebViewViewControllerDelegate?
     
@@ -27,24 +29,8 @@ final class WebViewViewController: UIViewController, AuthViewControllerDelegate 
         setupConstraints()
         view.backgroundColor = .ypWhite
         webView.navigationDelegate = self
-        
-        webView.addObserver(
-            self,
-            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-            options: .new,
-            context: nil)
-    }
-    
-    override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey : Any]?,
-        context: UnsafeMutableRawPointer?
-    ) {
-        if keyPath == #keyPath(WKWebView.estimatedProgress) {
-            updateProgress()
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        progressObservation = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] _, _ in
+            self?.updateProgress()
         }
     }
     
@@ -163,8 +149,8 @@ extension WebViewViewController: WKNavigationDelegate {
             if
                 let url = navigationAction.request.url,
                 let urlComponents = URLComponents(
-                    string: url.absoluteString),  //2
-                urlComponents.path == "/oauth/authorize/native",
+                    string: url.absoluteString),  
+                    urlComponents.path == "/oauth/authorize/native",
                 let items = urlComponents.queryItems,
                 let codeItem = items.first(
                     where: { $0.name == "code" })
@@ -174,11 +160,10 @@ extension WebViewViewController: WKNavigationDelegate {
                 return nil
             }
         }
-
+    
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }
-    
 }
 
 //#Preview(traits: .portrait) {

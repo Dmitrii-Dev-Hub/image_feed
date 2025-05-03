@@ -1,12 +1,6 @@
 import Foundation
 
-enum NetworkError: Error {
-    case httpStatusCode(Int)
-    case urlRequestError(Error)
-    case urlSessionError
-}
-
-extension URLSession {
+struct NetworkService: NetworkServiceProtocol {
     func data(
         for request: URLRequest,
         completion: @escaping (Result<Data, Error>) -> Void
@@ -63,4 +57,5 @@ extension URLSession {
         return task
     }
 }
+
 

@@ -1,15 +1,34 @@
 import UIKit
+import Kingfisher
+
 
 final class ProfileViewController: UIViewController {
     
+    private let profileServer = ProfileService.shared
+    private let tokenStorage = OAuth2TokenStorage()
+    
+    private let profileService = ProfileService.shared
     private let imageViewUserPhoto = UIImageView()
     private let exitButton = UIButton()
     private let userNameLabel = UILabel()
     private let userEmailLabel = UILabel()
     private let userGreetingsLabel = UILabel()
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configure(model: profileService.profile)
+        
+        profileServer.fetchProfile(tokenStorage.token ?? "") { result in
+            switch result {
+            case .success(let profile):
+                self.userNameLabel.text = profile.name
+                self.userEmailLabel.text = profile.loginName
+            case .failure(_):
+                print("")
+            }
+        }
         
         setupImageView()
         setupExitButton()
@@ -19,8 +38,27 @@ final class ProfileViewController: UIViewController {
         setupConstraints()
         
         view.backgroundColor = .ypBlack
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
+        
     }
     
+    
+    func configure(model: Profile?) {
+        guard let model = model else { return }
+        userNameLabel.text = model.name
+        userEmailLabel.text = model.loginName
+        userGreetingsLabel.text = model.bio
+    }
     
     private func setupImageView() {
         imageViewUserPhoto
@@ -70,6 +108,23 @@ final class ProfileViewController: UIViewController {
         userGreetingsLabel.numberOfLines = 0
         
         view.addSubview(userGreetingsLabel)
+    }
+    
+    private func updateAvatar() {
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 50)
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        
+        imageViewUserPhoto.kf.setImage(
+            with: url,
+            placeholder: UIImage(resource: .profileNoActive),
+            options: [
+                .processor(processor)
+            ]
+        )
     }
     
     private func setupConstraints() {
