@@ -5,6 +5,14 @@ struct OAuthTokenResponseBody: Decodable {
 }
 
 final class OAuth2Service {
+    
+    var isAuthorized: Bool {
+        return OAuth2TokenStorage.shared.token != nil
+    }
+    
+    private var task: URLSessionDataTask?
+    private var lastCode: String?
+    private let urlSession = URLSession.shared
     static let shared = OAuth2Service()
     private init() {}
     
@@ -32,35 +40,35 @@ final class OAuth2Service {
     func fetchOAuthToken(
         code: String,
         completion: @escaping (Result<String, Error>) -> Void
-    ) {
+    ) { assert(Thread.isMainThread)
+        
+        guard lastCode != code else {
+            completion(.failure(ServiceError.differentCodes))
+            return
+        }
+        
+        task?.cancel()
+        lastCode = code
+        
         guard let request = makeOAuthTokenRequest(code: code) else {
             print("OAuth2Service - fetchOAuthToken: invalid request")
             completion(.failure(NetworkError.urlSessionError))
             return
         }
         
-        let task = URLSession.shared.data(for: request) { result in
+        let task = urlSession.objectTask(for: request) { (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
-            case .success(let data):
-                
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                do {
-                    let token = try decoder.decode(
-                        OAuthTokenResponseBody.self, from: data)
-                    guard let token = token.accessToken else {
-                        completion(.failure(
-                            NetworkError.urlSessionError))
-                        return
-                    }
+            case .success(let responseBody):
+                if let token = responseBody.accessToken {
                     completion(.success(token))
-                } catch {
-                    completion(.failure(error))
+                } else {
+                    completion(.failure(NetworkError.urlSessionError))
                 }
             case .failure(let error):
                 print("Error: \(error)")
                 completion(.failure(error))
             }
+            
         }
         task.resume()
     }

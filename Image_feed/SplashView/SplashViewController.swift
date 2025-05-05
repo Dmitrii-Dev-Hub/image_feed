@@ -6,7 +6,6 @@ final class SplashViewController: UIViewController {
     private let storage = OAuth2TokenStorage()
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -33,13 +32,11 @@ final class SplashViewController: UIViewController {
             return
         }
         
-        
         let tabBarController = TabBarViewController()
         window.rootViewController = tabBarController
         window.makeKeyAndVisible()
         
     }
-    
     
     private func switchToImagesListViewController() {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -53,7 +50,6 @@ final class SplashViewController: UIViewController {
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
     }
-    
     
 }
 extension SplashViewController {

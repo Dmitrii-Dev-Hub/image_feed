@@ -91,11 +91,11 @@ extension ImagesListViewController: UITableViewDataSource {
             for: indexPath) as? ImagesListCell else {
             return UITableViewCell()
         }
-            let image = images[indexPath.row]
-            let isActive = indexPath.row % 2 == 0
-            cell.setupCell(post: image, isActive: isActive)
-            return cell
-        }
+        let image = images[indexPath.row]
+        let isActive = indexPath.row % 2 == 0
+        cell.setupCell(post: image, isActive: isActive)
+        return cell
+    }
 }
 //#Preview(traits: .portrait) {
 //    ImagesListViewController()

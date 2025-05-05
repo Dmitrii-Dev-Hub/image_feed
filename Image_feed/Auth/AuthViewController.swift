@@ -1,10 +1,12 @@
 import UIKit
+import ProgressHUD
 
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
     
     weak var delegate: AuthViewControllerDelegate?
+    private let alertPresenter = AlertPresenter()
     private let oauth2Service = OAuth2Service.shared
-    private let oauth2TokenStorage = OAuth2TokenStorage()
+    private let oauth2ServiceStory = OAuth2TokenStorage()
     private let imageView = UIImageView()
     private let button = UIButton()
     
@@ -25,16 +27,28 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         self.navigationController?.popViewController(animated: true)
+        UIBlockingProgressHUD.show()
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
             guard let self = self else { return }
             navigationController?.popViewController(animated: true)
             switch result {
             case .success(let bearerToken):
-                self.oauth2TokenStorage.token = bearerToken
+                oauth2ServiceStory.token = bearerToken
                 delegate?.didAuthenticate(self)
+                
             case .failure(let error):
                 print("failure with error - \(error)")
             }
+            DispatchQueue.main.async {
+                let alert = UIAlertController(
+                    title: "Что-то пошло не так",
+                    message: "Не удалось войти в систему",
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "Ок", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+            UIBlockingProgressHUD.dismiss()
         }
     }
     
@@ -100,7 +114,9 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
 }
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
+    
 }
+
 
 
 //#Preview(traits: .portrait) {
