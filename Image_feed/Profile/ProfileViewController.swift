@@ -72,6 +72,7 @@ final class ProfileViewController: UIViewController {
     private func setupExitButton() {
         exitButton
             .translatesAutoresizingMaskIntoConstraints = false
+        exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
         exitButton.setImage(UIImage(named: "Exit"), for: .normal)
         view.addSubview(exitButton)
     }
@@ -126,6 +127,33 @@ final class ProfileViewController: UIViewController {
             ]
         )
     }
+    @objc private func didTapExitButton() {
+        let alert = UIAlertController(
+            title: "Пока пока!",
+            message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
+        
+        let titleFont = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 17)]
+        let attributedTitle = NSAttributedString(
+            string: "Пока, пока!", attributes: titleFont)
+        alert.setValue(attributedTitle, forKey: "attributedTitle")
+        
+        let yesAction = UIAlertAction(
+            title: "Да", style: .cancel) { _ in
+                ProfileLogoutService.shared.logout()
+                guard let window = UIApplication
+                    .shared.windows.first else { return }
+                window.rootViewController = SplashViewController()
+        }
+        
+        let noAction = UIAlertAction(
+            title: "Нет", style: .default, handler: nil)
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([

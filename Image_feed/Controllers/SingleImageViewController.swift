@@ -1,36 +1,28 @@
-
+import Kingfisher
 import UIKit
 
 class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     
+    var selectedPhoto: Photo?
+    var imageURL: URL?
+    var image = UIImage()
     private let imageView = UIImageView()
     private let backButton = UIButton()
     private let scrollView = UIScrollView()
     private let shareButton = UIButton()
-    var selectedPhoto: Photo?
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupImageView()
         setupScrollView()
         setupBackButton()
         setupShareButton()
         setupConstraints()
+        setFullImage()
         view.backgroundColor = .ypBlack
         
-    }
-    
-    private func setupImageView() {
-        
-        imageView
-            .translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        guard let photo = selectedPhoto else {
-            imageView.image = nil
-            return
-        }
-        imageView.image = UIImage(named: photo.image)
-        scrollView.addSubview(imageView)
     }
     
     private func setupScrollView() {
@@ -67,6 +59,63 @@ class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         
     }
     
+    private func setFullImage() {
+        UIBlockingProgressHUD.show()
+        
+        imageView.kf.setImage(with: imageURL) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let value):
+                print(value)
+                self.image = value.image
+                self.imageView.frame.size = image.size
+                self.configureScrollView(imageSize: image.size)
+            case .failure(let error):
+                print("Error \(error)")
+                let alertPresenter = AlertPresenter()
+                alertPresenter.delegate = self
+                
+                let alertModel = AlertModel(
+                    title: "Что-то пошло не так(",
+                    message: "Попробовать еще раз?",
+                    buttonText: "Ок") { [weak self] _ in
+                        self?.setFullImage()
+                    }
+                alertPresenter.showAlert(model: alertModel)
+            }
+            UIBlockingProgressHUD.dismiss()
+        }
+    }
+    private func configureScrollView(imageSize: CGSize?) {
+        setupZoomScales()
+        centerImage()
+        
+        guard let imageSize = imageSize else { return }
+        scrollView.contentSize = imageSize
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+    }
+    private func setupZoomScales() {
+        let scrollViewFrame = scrollView.bounds
+        let imageSize = imageView.bounds.size
+        let minScale = min(scrollViewFrame.width / imageSize.width, scrollViewFrame.height / imageSize.height)
+        let maxScale = max(scrollViewFrame.width / imageSize.width, scrollViewFrame.height / imageSize.height)
+        
+        scrollView.minimumZoomScale = minScale
+        scrollView.maximumZoomScale = maxScale
+        scrollView.zoomScale = maxScale
+    }
+    private func centerImage() {
+        let scrollViewSize = scrollView.bounds.size
+        let imageViewSize = imageView.frame.size
+        
+        let xOffset = max(0, (scrollViewSize.width - imageViewSize.width) / 2)
+        let yOffset = max(0, (scrollViewSize.height - imageViewSize.height) / 2)
+        
+        imageView.center = CGPoint(x: xOffset + imageViewSize.width / 2, y: yOffset + imageViewSize.height / 2)
+    }
+
+
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             //
@@ -137,6 +186,7 @@ class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         present(activityVC, animated: true, completion: nil)
     }
 }
+
 //#Preview(traits: .portrait) {
 //    let vc = SingleImageViewController()
 //    vc.selectedPhoto = Photo.mockData().first

@@ -8,7 +8,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     private let oauth2Service = OAuth2Service.shared
     private let oauth2ServiceStory = OAuth2TokenStorage()
     private let imageView = UIImageView()
-    private let button = UIButton()
+    private var button = UIButton()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -38,15 +38,15 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
                 
             case .failure(let error):
                 print("failure with error - \(error)")
-            }
-            DispatchQueue.main.async {
-                let alert = UIAlertController(
-                    title: "Что-то пошло не так",
-                    message: "Не удалось войти в систему",
-                    preferredStyle: .alert
-                )
-                alert.addAction(UIAlertAction(title: "Ок", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(
+                        title: "Что-то пошло не так",
+                        message: "Не удалось войти в систему",
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(UIAlertAction(title: "Ок", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
             }
             UIBlockingProgressHUD.dismiss()
         }
@@ -64,6 +64,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     }
     
     private func setupButton() {
+        button = UIButton(type: .system)
         button
             .translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Войти", for: .normal)
@@ -72,8 +73,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
         button.clipsToBounds = true
         button.layer.cornerRadius = 16
-        button.contentHorizontalAlignment = .center
-        button.contentVerticalAlignment = .center
+        button.titleLabel?.textAlignment = .center
         button.addTarget(
             self, action: #selector(openWebView),
             for: .touchUpInside)
@@ -105,11 +105,11 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         ])
     }
     @objc private func openWebView() {
+        print("openWebView")
         let webVC = WebViewViewController()
         webVC.delegate = self
-        webVC.modalPresentationStyle = .fullScreen
+//        webVC.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(webVC, animated: true)
-        
     }
 }
 protocol AuthViewControllerDelegate: AnyObject {

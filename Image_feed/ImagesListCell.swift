@@ -1,5 +1,9 @@
 import UIKit
+import Kingfisher
 
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
 
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
@@ -8,19 +12,28 @@ final class ImagesListCell: UITableViewCell {
     private let postCellHeartButton = UIButton()
     private let postCellDataLabel = UILabel()
     
+    var onLikeButtonTapped: (() -> Void)?
+    
+    weak var delegate: ImagesListCellDelegate?
+    
     private lazy var dateFormatter: DateFormatter = {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .long
-            formatter.timeStyle = .none
-            formatter.locale = Locale(identifier: "ru_RU")
-            formatter.dateFormat = "d MMMM yyyy"
-
-            return formatter
-        }()
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.dateFormat = "d MMMM yyyy"
+        return formatter
+    }()
+    
+    private var isLiked: Bool = false {
+        didSet {
+            let imageName = isLiked ? "Active" : "No Active"
+            postCellHeartButton.setImage(UIImage(named: imageName), for: .normal)
+        }
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         
         contentView.addSubview(postCellImage)
         contentView.addSubview(postCellHeartButton)
@@ -30,34 +43,37 @@ final class ImagesListCell: UITableViewCell {
         setupConstraints()
         contentView.backgroundColor = .ypBlack
         selectionStyle = .none
-        
     }
     
     private func setupPostCellHeartButton() {
-        postCellHeartButton.setImage(UIImage(named: "Active"), for: .normal)
         postCellHeartButton.translatesAutoresizingMaskIntoConstraints = false
         postCellHeartButton.backgroundColor = .clear
-        
+        postCellHeartButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
     }
     
-    func setupCell(post: Photo, isActive: Bool) {
+    func setIsLiked(_ isLiked: Bool) {
+        let newImage = isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
+        self.postCellHeartButton.setImage(newImage, for: .normal)
+    }
+    
+    @objc private func didTapLike() {
+        delegate?.imageListCellDidTapLike(self)
+    }
+    
+    func setupCell(post: Photo) {
         postCellImage.layer.cornerRadius = 16
         postCellImage.clipsToBounds = true
         postCellImage.translatesAutoresizingMaskIntoConstraints = false
         postCellImage.contentMode = .scaleAspectFill
-        postCellImage.image = UIImage(named: post.image)
+        postCellImage.kf.setImage(with: post.thumbImageURL)
         
-        let imageName = isActive ? "Active" : "No Active"
-        postCellHeartButton.setImage(UIImage(named: imageName), for: .normal)
-
+        isLiked = post.isLiked
+        postCellDataLabel.text = post.createdAt
         setupPostCellDataLabel()
-        
     }
     
     private func setupPostCellDataLabel() {
-        let currentDate = Date()
         postCellDataLabel.translatesAutoresizingMaskIntoConstraints = false
-        postCellDataLabel.text = dateFormatter.string(from: currentDate)
         postCellDataLabel.textColor = .ypWhite
         postCellDataLabel.font = UIFont.systemFont(ofSize: 13)
         postCellDataLabel.textAlignment = .left
@@ -65,33 +81,23 @@ final class ImagesListCell: UITableViewCell {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            
-            //Button
             postCellHeartButton.topAnchor.constraint(
-                equalTo: postCellImage.topAnchor, constant: 0),
+                equalTo: postCellImage.topAnchor),
             postCellHeartButton.trailingAnchor.constraint(
-                equalTo: postCellImage.trailingAnchor, constant: 0),
+                equalTo: postCellImage.trailingAnchor),
             postCellHeartButton.widthAnchor.constraint(
                 equalToConstant: 44),
             postCellHeartButton.heightAnchor.constraint(
                 equalToConstant: 44),
             
-            //Image
             postCellImage.topAnchor.constraint(
                 equalTo: contentView.topAnchor, constant: 8),
-            postCellImage.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor, constant: 16),
-            postCellImage.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor, constant: -16),
-            postCellImage.bottomAnchor.constraint(
-                equalTo: contentView.bottomAnchor, constant: -8),
+            postCellImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            postCellImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            postCellImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             
-            //Data
-            postCellDataLabel.leadingAnchor.constraint(
-                equalTo: postCellImage.leadingAnchor, constant: 8),
-            postCellDataLabel.bottomAnchor.constraint(
-                equalTo: postCellImage.bottomAnchor, constant: -8),
-            
+            postCellDataLabel.leadingAnchor.constraint(equalTo: postCellImage.leadingAnchor, constant: 8),
+            postCellDataLabel.bottomAnchor.constraint(equalTo: postCellImage.bottomAnchor, constant: -8),
         ])
     }
     
