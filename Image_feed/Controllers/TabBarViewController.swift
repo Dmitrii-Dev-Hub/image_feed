@@ -7,6 +7,7 @@ final class TabBarViewController: UITabBarController {
     private let imagesListViewController = ImagesListViewController()
     private let profileViewController = ProfileViewController()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBarImage()

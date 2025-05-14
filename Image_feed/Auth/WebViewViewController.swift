@@ -2,8 +2,11 @@ import UIKit
 @preconcurrency import WebKit
 
 protocol WebViewViewControllerDelegate: AnyObject {
-    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController)
+    func webViewViewController(
+        _ vc: WebViewViewController,
+        didAuthenticateWithCode code: String)
+    func webViewViewControllerDidCancel(
+        _ vc: WebViewViewController)
 }
 
 final class WebViewViewController: UIViewController, AuthViewControllerDelegate {
@@ -134,7 +137,8 @@ extension WebViewViewController: WKNavigationDelegate {
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
-        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+        decisionHandler: @escaping (
+            WKNavigationActionPolicy) -> Void
     ) {
         if let code = code(from: navigationAction) {
             delegate?.webViewViewController(self, didAuthenticateWithCode: code)
@@ -161,7 +165,8 @@ extension WebViewViewController: WKNavigationDelegate {
             }
         }
     
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+    func webViewViewControllerDidCancel(
+        _ vc: WebViewViewController) {
         dismiss(animated: true)
     }
 }

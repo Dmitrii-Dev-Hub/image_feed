@@ -6,9 +6,9 @@ struct OAuthTokenResponseBody: Decodable {
 
 final class OAuth2Service {
     
-    var isAuthorized: Bool {
-        return OAuth2TokenStorage.shared.token != nil
-    }
+//    var isAuthorized: Bool {
+//        return OAuth2TokenStorage.shared.token != nil
+//    }
     
     private var task: URLSessionDataTask?
     private var lastCode: String?
@@ -40,7 +40,8 @@ final class OAuth2Service {
     func fetchOAuthToken(
         code: String,
         completion: @escaping (Result<String, Error>) -> Void
-    ) { assert(Thread.isMainThread)
+    ) {
+        assert(Thread.isMainThread)
         
         guard lastCode != code else {
             completion(.failure(ServiceError.differentCodes))
