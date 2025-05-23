@@ -77,10 +77,10 @@ class ImagesListCell: UITableViewCell {
    
             
             
-            likeButton.trailingAnchor.constraint(equalTo: cellImageView.trailingAnchor, constant: -8),
-            likeButton.bottomAnchor.constraint(equalTo: cellImageView.bottomAnchor, constant: -8),
-            likeButton.widthAnchor.constraint(equalToConstant: 24),
-            likeButton.heightAnchor.constraint(equalToConstant: 24),
+                likeButton.trailingAnchor.constraint(equalTo: cellImageView.trailingAnchor, constant: -10.5),
+                likeButton.topAnchor.constraint(equalTo: cellImageView.topAnchor, constant: 12),
+            likeButton.widthAnchor.constraint(equalToConstant: 42),
+            likeButton.heightAnchor.constraint(equalToConstant: 42),
             
             dateLabel.leadingAnchor.constraint(equalTo: cellImageView.leadingAnchor, constant: 8),
             dateLabel.bottomAnchor.constraint(equalTo: cellImageView.bottomAnchor, constant: -8)

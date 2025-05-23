@@ -17,21 +17,21 @@ final class ImageFeedUITests: XCTestCase {
         app.buttons["Authenticate"].tap()
         
         let webView = app.webViews["UnsplashWebView"]
-        sleep(3)
+
         XCTAssertTrue(webView.waitForExistence(timeout: 5))
-        sleep(3)
+ 
         let loginTextField = webView.descendants(matching: .textField).element
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
         
         loginTextField.tap()
-        loginTextField.typeText("Login")
+        loginTextField.typeText("dmitry_bauzhadze@mail.ru")
         dismissKeyboardIfPresent()
         
         let passwordTextField = webView.descendants(matching: .secureTextField).element
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
         
         passwordTextField.tap()
-        passwordTextField.typeText("Password")
+        passwordTextField.typeText("Qazxswedcvb1")
         dismissKeyboardIfPresent()
         
         webView.buttons["Login"].tap()
@@ -86,7 +86,7 @@ final class ImageFeedUITests: XCTestCase {
         sleep(1)
         
         XCTAssertTrue(app.staticTexts["Dmitrii Bauzhadze"].exists)
-        XCTAssertTrue(app.staticTexts["Dmitry_bauzhadze@mail.ru"].exists)
+        XCTAssertTrue(app.staticTexts["@dmitriibau"].exists)
         
         app.buttons["logoutButton"].tap()
         app.alerts["Alert"].scrollViews.otherElements.buttons["Yes"].tap()

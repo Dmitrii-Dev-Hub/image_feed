@@ -89,10 +89,10 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
                 equalTo: view.centerXAnchor),
             imageView.centerYAnchor.constraint(
                 equalTo: view.centerYAnchor),
-            imageView.heightAnchor.constraint(
-                equalToConstant: 60),
-            imageView.widthAnchor.constraint(
-                equalToConstant: 60),
+//            imageView.heightAnchor.constraint(
+//                equalToConstant: 60),
+//            imageView.widthAnchor.constraint(
+//                equalToConstant: 60),
             
             //
             button.leadingAnchor.constraint(

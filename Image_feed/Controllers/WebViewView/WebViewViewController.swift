@@ -42,6 +42,8 @@ final class WebViewViewController: UIViewController, WebViewControllerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        presenter?.viewDidLoad()
+        
         setupWebView()
         setupProgressView()
         setupBackwardButton()
@@ -49,6 +51,7 @@ final class WebViewViewController: UIViewController, WebViewControllerProtocol {
         setupConstraints()
         view.backgroundColor = .ypWhite
         webView.navigationDelegate = self
+        webView.accessibilityIdentifier = "UnsplashWebView"
         progressObservation = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] _, _ in
             self?.updateProgress()
         }
@@ -88,12 +91,7 @@ final class WebViewViewController: UIViewController, WebViewControllerProtocol {
     
     
     @objc private func backToAuthViewController() {
-//        let authVC = AuthViewController()
-//        authVC.delegate = self
-//        navigationController?.pushViewController(
-//            authVC, animated: true)
         delegate?.webViewViewControllerDidCancel(self)
-
     }
 }
 
