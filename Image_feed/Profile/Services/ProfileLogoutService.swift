@@ -16,7 +16,7 @@ final class ProfileLogoutService: ProfileLogoutServiceProtocol {
         KeychainWrapper.standard.remove(forKey: KeychainWrapper.Key(
             rawValue: Constants.Keys.bearerTokenKey))
         profileImageService.clearBeforeLogout()
-        profileService.resetProfile()
+        profileService.clearBeforeLogout()
         imagesListService.clearBeforeLogout()
         
         switchToSplashController()

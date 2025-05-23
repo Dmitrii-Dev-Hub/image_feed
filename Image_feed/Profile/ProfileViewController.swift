@@ -2,7 +2,7 @@ import UIKit
 import Kingfisher
 
 
-final class ProfileViewController: UIViewController, ProfileViewProtocol {
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
     var presenter: ProfilePresenterProtocol?
     private let imageViewUserPhoto = UIImageView()
     private let exitButton = UIButton()
@@ -42,7 +42,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         userGreetingsLabel.text = model?.bio
     }
     
-    private func updateAvatar() {
+    func updateAvatar() {
         presenter?.updateAvatar()
     }
     func setAvatar(url: URL) {
