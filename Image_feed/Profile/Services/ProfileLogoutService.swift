@@ -2,8 +2,8 @@ import Foundation
 import WebKit
 import SwiftKeychainWrapper
 
-final class ProfileLogoutService {
-    static let shared = ProfileLogoutService()
+final class ProfileLogoutService: ProfileLogoutServiceProtocol {
+    static let shared: ProfileLogoutServiceProtocol = ProfileLogoutService()
     
     private let profileImageService = ProfileImageService.shared
     private let profileService = ProfileService.shared
@@ -15,7 +15,7 @@ final class ProfileLogoutService {
         cleanCookies()
         KeychainWrapper.standard.remove(forKey: KeychainWrapper.Key(
             rawValue: Constants.Keys.bearerTokenKey))
-        profileImageService.resetAvatar()
+        profileImageService.clearBeforeLogout()
         profileService.resetProfile()
         imagesListService.clearBeforeLogout()
         

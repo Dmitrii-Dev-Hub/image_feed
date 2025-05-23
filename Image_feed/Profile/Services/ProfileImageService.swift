@@ -26,7 +26,7 @@ final class ProfileImageService {
         return request
     }
     
-    func resetAvatar() {
+    func clearBeforeLogout() {
            avatarURL = nil
        }
     

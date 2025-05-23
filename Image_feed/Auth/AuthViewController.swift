@@ -4,6 +4,7 @@ import ProgressHUD
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
     
     weak var delegate: AuthViewControllerDelegate?
+    private let showWebViewSegueIdentifier = "ShowWebView"
     private let alertPresenter = AlertPresenter()
     private let oauth2Service = OAuth2Service.shared
     private let oauth2ServiceStory = OAuth2TokenStorage()
@@ -67,6 +68,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         button = UIButton(type: .system)
         button
             .translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityIdentifier = "Authenticate"
         button.setTitle("Войти", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .ypWhite
@@ -105,11 +107,14 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         ])
     }
     @objc private func openWebView() {
-        print("openWebView")
-        let webVC = WebViewViewController()
-        webVC.delegate = self
-//        webVC.modalPresentationStyle = .fullScreen
-        navigationController?.pushViewController(webVC, animated: true)
+        let webViewController = WebViewViewController()
+        let authHelper = AuthHelper()
+        let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+        webViewController.presenter = webViewPresenter
+        webViewPresenter.view = webViewController
+        webViewController.delegate = self
+        webViewController.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(webViewController, animated: true)
     }
 }
 protocol AuthViewControllerDelegate: AnyObject {
