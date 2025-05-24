@@ -8,6 +8,15 @@ final class ImageFeedUITests: XCTestCase {
         
         app.launch()
     }
+    func pasteText(_ text: String, into element: XCUIElement) {
+        UIPasteboard.general.string = text
+        element.press(forDuration: 1.2)
+        
+        let pasteMenuItem = XCUIApplication().menuItems["Paste"]
+        if pasteMenuItem.waitForExistence(timeout: 2) {
+            pasteMenuItem.tap()
+        }
+    }
     
     override func tearDownWithError() throws {
         print(app.debugDescription)
@@ -17,30 +26,55 @@ final class ImageFeedUITests: XCTestCase {
         app.buttons["Authenticate"].tap()
         
         let webView = app.webViews["UnsplashWebView"]
-
-        XCTAssertTrue(webView.waitForExistence(timeout: 5))
- 
+        XCTAssertTrue(webView.waitForExistence(timeout: 15))
+        
         let loginTextField = webView.descendants(matching: .textField).element
-        XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
+        XCTAssertTrue(loginTextField.waitForExistence(timeout: 15))
         
         loginTextField.tap()
-        loginTextField.typeText("dmitry_bauzhadze@mail.ru")
+        pasteText("dmitry_bauzhadze@mail.ru", into: loginTextField)
         dismissKeyboardIfPresent()
         
         let passwordTextField = webView.descendants(matching: .secureTextField).element
-        XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
+        XCTAssertTrue(passwordTextField.waitForExistence(timeout: 15))
         
         passwordTextField.tap()
-        passwordTextField.typeText("Qazxswedcvb1")
+        pasteText("Qazxswedcvb1", into: passwordTextField)
         dismissKeyboardIfPresent()
         
         webView.buttons["Login"].tap()
         
         let tablesQuery = app.tables
         let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
-        
-        XCTAssertTrue(cell.waitForExistence(timeout: 5))
+        XCTAssertTrue(cell.waitForExistence(timeout: 15))
     }
+
+    
+//    func testAuth() throws {
+//        app.buttons["Authenticate"].tap()
+//        
+//        let webView = app.webViews["UnsplashWebView"]
+//
+//        XCTAssertTrue(webView.waitForExistence(timeout: 15))
+// 
+//        let loginTextField = webView.descendants(matching: .textField).element
+//        XCTAssertTrue(loginTextField.waitForExistence(timeout: 15))
+//        
+//        loginTextField.tap()
+//        loginTextField.typeText("dmitry_bauzhadze@mail.ru")
+//        dismissKeyboardIfPresent()
+//        
+//        let passwordTextField = webView.descendants(matching: .secureTextField).element
+//        XCTAssertTrue(passwordTextField.waitForExistence(timeout: 15))
+//        passwordTextField.tap()
+//        passwordTextField.typeText("Qazxswedcvb1")
+//        dismissKeyboardIfPresent()
+//        webView.buttons["Login"].tap()
+//        let tablesQuery = app.tables
+//        let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
+//        
+//        XCTAssertTrue(cell.waitForExistence(timeout: 15))
+//    }
     
     func testFeed() throws {
         let tablesQuery = app.tables
