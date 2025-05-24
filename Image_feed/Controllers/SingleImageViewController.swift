@@ -39,6 +39,7 @@ class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     private func setupBackButton() {
         backButton
             .translatesAutoresizingMaskIntoConstraints = false
+        backButton.accessibilityIdentifier = "BackToImagesListButton"
         backButton.setImage(
             UIImage(named: "chevron.backward"), for: .normal)
         backButton.addTarget(

@@ -11,8 +11,28 @@ final class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBarImage()
+        
+//        let imagesListVC = ImagesListViewController()
+//        imagesListVC.presenter = ImagesListPresenter(view: imagesListVC)
+//        setupImagesListViewController()
+//        
+//        let profileVC = ProfileViewController()
+//        profileVC.presenter = ProfilePresenter(view: profileVC)
+//        setupProfileViewController()
+//        
+//        setViewControllers([imagesListVC, profileVC], animated: true)
+        
         setupImagesListViewController()
         setupProfileViewController()
+        
+        let profilePresenter = ProfilePresenter(view: profileViewController)
+        profileViewController.presenter = profilePresenter
+        
+        let imagesListPresenter = ImagesListPresenter(view: imagesListViewController)
+        imagesListViewController.presenter = imagesListPresenter
+//        let imagesListVC = ImagesListViewController()
+//        imagesListVC.presenter = ImagesListPresenter(view: imagesListVC)
+        
         
         setViewControllers([imagesListViewController,
                             profileViewController,
