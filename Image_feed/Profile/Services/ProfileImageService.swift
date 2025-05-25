@@ -1,7 +1,8 @@
 import Foundation
 
-final class ProfileImageService {
-    static let shared = ProfileImageService()
+final class ProfileImageService: ProfileImageServiceProtocol {
+    
+    static let shared: ProfileImageServiceProtocol = ProfileImageService()
     static let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
     
     private(set) var avatarURL: String?
@@ -26,7 +27,7 @@ final class ProfileImageService {
         return request
     }
     
-    func resetAvatar() {
+    func clearBeforeLogout() {
            avatarURL = nil
        }
     

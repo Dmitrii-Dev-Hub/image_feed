@@ -1,8 +1,14 @@
 import Foundation
 import UIKit
 
-final class ProfileService {
-    static let shared = ProfileService()
+final class ProfileService: ProfileServiceProtocol {
+
+    
+//    static var shared: any ProfileServiceProtocol
+//    
+//    
+//    static let shared = ProfileService()
+    static let shared: ProfileServiceProtocol = ProfileService()
     private init() {}
     
     private let networkService: NetworkServiceProtocol = NetworkService()
@@ -12,14 +18,27 @@ final class ProfileService {
     private var lastToken: String?
     private var task: URLSessionTask?
     
-    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
-        assert(Thread.isMainThread)
-        
-        if lastToken == token {
-            completion(.failure(ServiceError.differentCodes))
-            print("ProfileService error: fetchProfile - repeatedRequest")
-            return
-        }
+    func clearBeforeLogout() {
+        profile = nil
+    }
+    
+//    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
+//        assert(Thread.isMainThread)
+//        
+//        if lastToken == token {
+//            completion(.failure(ServiceError.differentCodes))
+//            print("ProfileService error: fetchProfile - repeatedRequest")
+//            return
+//        }
+//        
+        func fetchProfile(bearerToken token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
+            assert(Thread.isMainThread)
+            
+            if lastToken == token {
+                completion(.failure(ServiceError.differentCodes))
+                print("ProfileService error: fetchProfile - repeatedRequest")
+                return
+            }
         
         task?.cancel()
         lastToken = token
